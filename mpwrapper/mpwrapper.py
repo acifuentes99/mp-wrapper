@@ -19,12 +19,8 @@ class MercadoPagoClass:
             return None
 
     def get(self, url, data):
-        args = ''
-        if len(data) > 0:
-            for key in data:
-                args += '&?'+str(key)+'='+str(data[key])
         try:
-            req = requests.get(self.API_BASE_URL+url+'/?access_token='+self.access_token+args, headers={'Content-type':self.MIME_JSON, 'Accept':self.MIME_JSON})
+            req = requests.get(self.API_BASE_URL+url+'/?access_token='+self.access_token, params=data, headers={'Content-type':self.MIME_JSON, 'Accept':self.MIME_JSON})
             if req.ok:
                 return req.json()
             else:
@@ -52,4 +48,4 @@ class mpCustomers(MercadoPagoClass):
         return self.get('/v1/customers/search', data)
 
     def card_create(self, data):
-        return self.post('/v1/customers/'+data['customer']+'/cards', data).json()
+        return self.post('/v1/customers/'+data['customer']+'/cards', data)
