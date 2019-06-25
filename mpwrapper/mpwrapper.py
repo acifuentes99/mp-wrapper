@@ -11,12 +11,13 @@ class MercadoPagoClass:
     def post(self, url, data):
         try:
             req = requests.post(self.API_BASE_URL+url+'/?access_token='+self.access_token, json=data, headers={'Content-type':self.MIME_JSON, 'Accept':self.MIME_JSON})
+            print(req.text)
             if req.ok:
                 return req.json()
             else:
-                return None
+                raise Exception(req.text)
         except requests.exceptions.HTTPError as err:
-            return None
+            return err
 
     def get(self, url, data):
         try:
@@ -24,9 +25,9 @@ class MercadoPagoClass:
             if req.ok:
                 return req.json()
             else:
-                return None
+                raise Exception(req.text)
         except requests.exceptions.HTTPError as err:
-            return None
+            return err
 
 
 class mpPayments(MercadoPagoClass):
