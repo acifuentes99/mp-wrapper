@@ -1,46 +1,24 @@
-import json
-import requests
-
-class MercadoPagoClass:
-    API_BASE_URL = "https://api.mercadopago.com"
-    MIME_JSON = "application/json"
-    MIME_FORM = "application/x-www-form-urlencoded"
-    def __init__(self, access_token):
-        self.access_token = access_token
-
-    def post(self, url, data):
-        try:
-            req = requests.post(self.API_BASE_URL+url+'/?access_token='+self.access_token, json=data, headers={'Content-type':self.MIME_JSON, 'Accept':self.MIME_JSON})
-            print(req.text)
-            if req.ok:
-                return req.json()
-            else:
-                raise Exception(req.text)
-        except requests.exceptions.HTTPError as err:
-            return err
-
-    def get(self, url, data):
-        try:
-            req = requests.get(self.API_BASE_URL+url+'/?access_token='+self.access_token, params=data, headers={'Content-type':self.MIME_JSON, 'Accept':self.MIME_JSON})
-            if req.ok:
-                return req.json()
-            else:
-                raise Exception(req.text)
-        except requests.exceptions.HTTPError as err:
-            return err
+from .base import MercadoPagoClass
 
 
-class mpPayments(MercadoPagoClass):
-    def __init__(self, access_token):
-        self.access_token = access_token
-
+class Payments(MercadoPagoClass):
     def create(self, data):
         return self.post('/v1/payments', data)
 
+    def get(self, payment_id):
+        return self.get('/v1/payments/'+str(payment_id))
 
-class mpCustomers(MercadoPagoClass):
+    def put(self, payment_id, data):
+        return self.post('/v1/payments/'+str(payment_id), data)
+
+    def search(self, data):
+        return self.get('/v1/payments', data)
+
+
+class Customers(MercadoPagoClass):
     def __init__(self, access_token):
         self.access_token = access_token
+        self.cards = Cards(access_token)
 
     def create(self, data):
         return self.post('/v1/customers', data)
@@ -48,5 +26,10 @@ class mpCustomers(MercadoPagoClass):
     def search(self, data):
         return self.get('/v1/customers/search', data)
 
-    def card_create(self, data):
+
+class Cards(MercadoPagoClass):
+    def create(self, data):
         return self.post('/v1/customers/'+data['customer']+'/cards', data)
+
+    def delete(self, customer_id, card_id):
+        return self.delete('/v1/customers/'+str(customer_id)+'/cards/'+str(card_id))
