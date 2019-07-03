@@ -11,44 +11,32 @@ class MercadoPagoClass:
         self.access_token = access_token
 
     def post(self, url, data):
-        try:
-            req = requests.post(self.API_BASE_URL+url+'/?access_token='+self.access_token, json=data, headers=self.headers)
-            if req.ok:
-                return req.json()
-            else:
-                raise Exception(req.text)
-        except requests.exceptions.HTTPError as err:
-            return err
+        req = requests.post(self.API_BASE_URL+url+'/?access_token='+self.access_token, json=data, headers=self.headers)
+        return {
+            'status': True if req.ok else False,
+            'response': req.json()
+        }
 
     def get(self, url, data=None):
-        try:
-            if data:
-                req = requests.get(self.API_BASE_URL+url+'/?access_token='+self.access_token, params=data, headers=self.headers)
-            else:
-                req = requests.get(self.API_BASE_URL+url+'/?access_token='+self.access_token, headers=self.headers)
-            if req.ok:
-                return req.json()
-            else:
-                raise Exception(req.text)
-        except requests.exceptions.HTTPError as err:
-            return err
+        if data:
+            req = requests.get(self.API_BASE_URL+url+'/?access_token='+self.access_token, params=data, headers=self.headers)
+        else:
+            req = requests.get(self.API_BASE_URL+url+'/?access_token='+self.access_token, headers=self.headers)
+        return {
+            'status': True if req.ok else False,
+            'response': req.json()
+        }
 
     def put(self, url, data):
-        try:
-            req = requests.post(self.API_BASE_URL+url+'/?access_token='+self.access_token, json=data, headers=self.headers)
-            if req.ok:
-                return req.json()
-            else:
-                raise Exception(req.text)
-        except requests.exceptions.HTTPError as err:
-            return err
+        req = requests.post(self.API_BASE_URL+url+'/?access_token='+self.access_token, json=data, headers=self.headers)
+        return {
+            'status': True if req.ok else False,
+            'response': req.json()
+        }
 
     def delete(self, url, data=None):
-        try:
-            req = requests.delete(self.API_BASE_URL+url+'/?access_token='+self.access_token, headers=self.headers)
-            if req.ok:
-                return req.json()
-            else:
-                raise Exception(req.text)
-        except requests.exceptions.HTTPError as err:
-            return err
+        req = requests.delete(self.API_BASE_URL+url+'/?access_token='+self.access_token, headers=self.headers)
+        return {
+            'status': True if req.ok else False,
+            'response': req.json()
+        }
